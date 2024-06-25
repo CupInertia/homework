@@ -1,0 +1,19 @@
+@startuml
+
+!include <C4/C4_Container>
+
+Person(user, User)
+
+System(stock, Stock store, "Stores stock item. Logs sale and remaining stock")
+
+System_Ext(kafka, Kafka)
+
+System_Ext(db, Database)
+
+Rel(user, stock, "Adds, updates, delete and sells stock items")
+
+Rel(stock, kafka, "Produces and consumes messages of sale")
+
+Rel(stock, db, "Stores and retrives items")
+
+@enduml

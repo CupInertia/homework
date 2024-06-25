@@ -1,0 +1,238 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Storage and sale of stock.",
+        "version": "0.0.1"
+    },
+    "paths": {
+        "/stock/{stockID}": {
+            "get": {
+                "summary": "Stock information.",
+                "description": "Returns description of a specific item in stock.",
+                "parameters": [
+                  {
+                    "name": "stockID",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/components/schemas/stockID"
+                    }
+                  }  
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The stock requested.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/stock"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The stock has not been found."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update stock.",
+                "description": "Update properties of stock.",
+                "parameters": [
+                    {
+                        "name": "stockID",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/stockID"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Properties of the stock.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/stockUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated the stock.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/stock"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete stock",
+                "description": "Delete stock by ID",
+                "parameters": [
+                    {
+                        "name": "stockID",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/stockID"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted the stock."
+                    }
+                }
+            }
+        },
+        "/stock": {
+            "post": {
+                "summary": "Stock a new item.",
+                "description": "Introduce a new item into stock.",
+                "parameters": [],
+                "requestBody": {
+                    "description": "Properties of a new stock item.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/stockUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Stored the new stock.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/stock"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stock/{stockID}/sales": {
+            "post": {
+                "summary": "Sell stock.",
+                "description": "Sell a quantity of stock.",
+                "parameters": [
+                    {
+                        "name": "stockID",
+                        "in": "path",
+                        "required": "true",
+                        "schema": {
+                           "$ref":"#/components/schemas/stockID"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "The quantity of stock to sell.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/saleRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "The stock has been sold.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/sale"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "sale": {
+              "type": "object",
+              "required": ["id", "quantity", "time"],
+              "properties": {
+                "id": {
+                    "$ref": "#/components/schemas/stockID"
+                },
+                "itemId": {
+                    "$ref": "#/components/schemas/stockID"
+                },
+                "quantity": {
+                    "type": "number"
+                },
+                "time": {
+                    "type": "string",
+                    "formar": "date-time"
+                }
+              }  
+            },
+            "saleRequest": {
+                "type": "object",
+                "required": ["quantity"],
+                "properties": {
+                    "quantity": {
+                        "type": "number",
+                        "minimum": 1
+                    }
+                }
+            },
+            "stockID": {
+                "type": "string"
+            },
+            "stock": {
+                "type": "object",
+                "required": ["id", "name", "quantity", "price"],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "price": {
+                        "type": "number",
+                        "minimum": 0
+                    }
+                }
+            },
+            "stockUpdate": {
+                "type": "object",
+                "required": ["name", "quantity", "price"],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "price": {
+                        "type": "number",
+                        "minimum": 0
+                    }
+                }
+            }
+        }
+    }
+}
